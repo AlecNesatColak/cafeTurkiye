@@ -1,5 +1,4 @@
 import React from "react";
-
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
@@ -12,7 +11,7 @@ import Menu from "./pages/Menu";
 import Order from "./pages/Order";
 import Shop from "./pages/Shop";
 import Logout from "./pages/Logout";
-
+import ApplyStaff from "./pages/ApplyStaff";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -46,6 +45,14 @@ function App() {
           element={
             <ProtectedRoute>
               <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/apply-staff"
+          element={
+            <ProtectedRoute>
+              <ApplyStaff />
             </ProtectedRoute>
           }
         />

@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-
 const User = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authMiddleware = require("../middlewares/authMiddleware");
+const Staff = require("../models/staffModel");
 
 router.post("/register", async (req, res) => {
   try {
@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
       .send({ msg: "User registered successfully", success: true });
   } catch (error) {
     console.log(error);
-    res.status(500).send({ msg: "Internal server error" });
+    res.status(500).send({ msg: "Error creating user" });
   }
 });
 
@@ -84,7 +84,30 @@ router.post("/get-user-info-by-id", authMiddleware, async (req, res) => {
     console.log(error);
     return res
       .status(500)
-      .send({ msg: "Internal server error", success: false });
+      .send({ msg: "Error getting user info", success: false });
+  }
+});
+
+router.post("/apply-staff-account", authMiddleware, async (req, res) => {
+  try {
+    const newStaff = new Staff({...req.body, status: "pending"});
+    await newStaff.save();
+    const adminUser = await User.findOne({ isAdmin: true });
+    const unseenNotifs = adminUser.unseenNotifs;
+    unseenNotifs.push({
+      title: "New Staff Application",
+      data : {
+        staffId: newStaff._id,
+        message: `${newStaff.firstName} ${newStaff.lastName} has applied for a staff account`,
+        name: newStaff.firstName + " " + newStaff.lastName,
+      },
+      onClickPath: "/admin/staff",
+    });
+    await User.findByIdAndUpdate(adminUser._id, {unseenNotifs});
+    res.status(200).send({ msg: "Applied for staff account successfully", success: true });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ msg: "Error applying for staff account" });
   }
 });
 

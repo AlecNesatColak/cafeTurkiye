@@ -10,7 +10,7 @@ input {
   height: 40px !important;
 }
 
-input:focus {
+input:focus, .ant-picker {
   outline: none !important;
   box-shadow: none !important;
   border: 1px solid gray !important;
@@ -23,6 +23,17 @@ label {
 
 .ant-form-item {
   margin: 10px 0 !important;
+}
+
+.ant-picker-input input{
+  border: none !important;
+}
+
+.ant-picker {
+  height: 40px !important;
+  border-radius: 2px;
+  border: 1px solid rgba(128, 128, 128, 0.521) !important;
+  height: 40px !important;
 }
 
 /* Common Styling*/
@@ -51,12 +62,14 @@ label {
 }
 
 .card-title {
-  font-size: 1.5rem;
+  font-size: 22px;
   font-weight: bold;
+  color: rgba(0, 0, 0, 0.65);
 }
 
 .card {
   box-shadow: 0 0 2px gray;
+  border-radius: 0 !important;
 }
 
 .primary-button {
@@ -66,6 +79,7 @@ label {
   width: 100% !important;
   color: white !important;
   font-size: 16px !important;
+  width: max-content !important;
 }
 
 .anchor {
