@@ -21,6 +21,22 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please confirm your password!"],
     },
+    isStaff: {
+      type: Boolean,
+      default: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    seenNotifs: {
+      type: Array,
+      default: [],
+    },
+    unseenNotifs: {
+      type: Array,
+      default: [],
+    },
   },
   {
     timestamps: true,

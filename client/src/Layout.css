@@ -40,6 +40,11 @@
     width: 100%;
 }
 
+.logo {
+    color: white;
+    fontweight: bold;
+}
+
 .menu {
     margin-top: 80px;
     padding: 0 20px;

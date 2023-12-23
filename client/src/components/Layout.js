@@ -1,24 +1,23 @@
 import React, { useState, useEffect } from "react";
 import "../Layout.css";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { HiMiniHome } from "react-icons/hi2";
 import { MdMenuBook } from "react-icons/md";
 import { FaListUl } from "react-icons/fa6";
 import { CiShop } from "react-icons/ci";
 import { CgLogOut } from "react-icons/cg";
 import { MdCloseFullscreen } from "react-icons/md";
+import { FaUser } from "react-icons/fa";
 import { RiMenuUnfoldFill } from "react-icons/ri";
 import { IoIosNotificationsOutline } from "react-icons/io";
+import { MdOutlineWork } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { set } from "mongoose";
 
 function Layout({ children }) {
-  const [collapsed, setCollapsed] = useState();
-  const handleToggleCollapse = () => {
-    if (collapsed) {
-      setCollapsed(true);
-    } else {
-      setCollapsed(true);
-    }
-  };
+  const { user } = useSelector((state) => state.user);
+  const [collapesed, setCollapesed] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
   const userMenu = [
     {
@@ -41,14 +40,27 @@ function Layout({ children }) {
       path: "/shop",
       icon: <CiShop />,
     },
+  ];
+
+  const adminMenu = [
     {
-      name: "Logout",
-      path: "/logout",
-      icon: <CgLogOut />,
+      name: "Home",
+      path: "/",
+      icon: <HiMiniHome />,
+    },
+    {
+      name: "users",
+      path: "/users",
+      icon: <FaUser />,
+    },
+    {
+      name: "staff",
+      path: "/staff",
+      icon: <MdOutlineWork />,
     },
   ];
 
-  const menuToBeRendered = userMenu;
+  const menuToBeRendered = user?.isAdmin ? adminMenu : userMenu;
 
   return (
     <div className="main">
@@ -58,42 +70,56 @@ function Layout({ children }) {
             <h1 className="logo">CT</h1>
           </div>
 
-          <button onClick={handleToggleCollapse}>
-            {collapsed ? <RiMenuUnfoldFill /> : <MdCloseFullscreen />}
-          </button>
-
           <div className="menu">
-            {menuToBeRendered.map((menu, index) => {
+            {menuToBeRendered.map((menu) => {
               const isActive = location.pathname === menu.path;
               return (
                 <div
                   className={`d-flex menu-item ${
                     isActive && "active-menu-item"
                   }`}
-                  key={index}
                 >
-                  {!collapsed ? (
-                    <>
-                      <i>{menu.icon}</i>
-                      <Link to={menu.path}>{menu.name}</Link>
-                    </>
-                  ) : (
-                    <Link to={menu.path}>
-                      <i>{menu.icon}</i>
-                    </Link>
-                  )}
+                  <i>{menu.icon}</i>
+                  {!collapesed && <Link to={menu.path}>{menu.name}</Link>}
                 </div>
               );
             })}
+            <div
+                  className={`d-flex menu-item `} onClick={() => {
+                    localStorage.clear();
+                    navigate("/login");
+                  }}
+                >
+                  <i><CgLogOut/></i>
+                  {!collapesed && <Link to='/logout'>Logout</Link>}
+                </div>
           </div>
         </div>
 
         <div className="content">
           <div className="header">
-            <div className="d-flex">
-              <i className="header-action-icon">
+            {collapesed ? (
+              <i
+                className="header-action-icon"
+                onClick={() => setCollapesed(false)}
+              >
+                <RiMenuUnfoldFill></RiMenuUnfoldFill>
+              </i>
+            ) : (
+              <i
+                className="header-action-icon"
+                onClick={() => setCollapesed(true)}
+              >
+                <MdCloseFullscreen></MdCloseFullscreen>
+              </i>
+            )}
+            <div className="d-flex align-items-center px-4">
+              <i className="header-action-icon px-2">
                 <IoIosNotificationsOutline />
               </i>
+              <Link className="anchor" to="/profile">
+                {user?.name}
+              </Link>
             </div>
           </div>
           <div className="body">{children}</div>
