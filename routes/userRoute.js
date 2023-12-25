@@ -72,6 +72,7 @@ router.post("/get-user-info-by-id", authMiddleware, async (req, res) => {
   try {
     const user = await User.findById({ _id: req.body.userId });
     user.password = undefined;
+    user.confirmPassword = undefined;
     if (!user) {
       return res.status(200).send({ msg: "User not found", success: false });
     } else {
@@ -90,24 +91,61 @@ router.post("/get-user-info-by-id", authMiddleware, async (req, res) => {
 
 router.post("/apply-staff-account", authMiddleware, async (req, res) => {
   try {
-    const newStaff = new Staff({...req.body, status: "pending"});
+    const newStaff = new Staff({ ...req.body, status: "pending" });
     await newStaff.save();
     const adminUser = await User.findOne({ isAdmin: true });
     const unseenNotifs = adminUser.unseenNotifs;
     unseenNotifs.push({
       title: "New Staff Application",
-      data : {
+      message: `${newStaff.firstName} ${newStaff.lastName} has applied for a staff account`,
+      data: {
         staffId: newStaff._id,
-        message: `${newStaff.firstName} ${newStaff.lastName} has applied for a staff account`,
         name: newStaff.firstName + " " + newStaff.lastName,
       },
       onClickPath: "/admin/staff",
     });
-    await User.findByIdAndUpdate(adminUser._id, {unseenNotifs});
-    res.status(200).send({ msg: "Applied for staff account successfully", success: true });
+    await User.findByIdAndUpdate(adminUser._id, { unseenNotifs });
+    res
+      .status(200)
+      .send({ msg: "Applied for staff account successfully", success: true });
   } catch (error) {
     console.log(error);
     res.status(500).send({ msg: "Error applying for staff account" });
+  }
+});
+
+router.post("/mark-all-notifs-as-seen", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.body.userId });
+    const unseenNotifs = user.unseenNotifs;
+    const seenNotifs = user.seenNotifs;
+    seenNotifs.push(...unseenNotifs);
+    user.unseenNotifs = [];
+    user.seenNotifs = seenNotifs;
+    const updatedUser = await user.save();
+    updatedUser.password = undefined;
+    res
+      .status(200)
+      .send({ msg: "Notifs marked as seen", success: true, data: updatedUser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ msg: "Error marking all notifs" });
+  }
+});
+
+router.post("/delete-all-notifs", authMiddleware, async (req, res) => {
+  try {
+    const user = await User.findOne({ _id: req.body.userId });
+    user.seenNotifs = [];
+    user.unseenNotifs = [];
+    const updatedUser = await user.save();
+    updatedUser.password = undefined;
+    res
+      .status(200)
+      .send({ msg: "Notifs marked as deleted", success: true, data: updatedUser });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send({ msg: "Error deleting all notifs" });
   }
 });
 

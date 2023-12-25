@@ -123,7 +123,7 @@ function Layout({ children }) {
               </i>
             )}
             <div className="d-flex align-items-center px-4">
-              <Badge count={user?.unseenNotifs.length}>
+              <Badge count={user?.unseenNotifs.length} onClick={()=>navigate('/notifications')}> 
                 <i className="header-action-icon px-2">
                 <IoIosNotificationsOutline/>
               </i>

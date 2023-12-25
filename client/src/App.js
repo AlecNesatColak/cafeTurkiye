@@ -12,6 +12,7 @@ import Order from "./pages/Order";
 import Shop from "./pages/Shop";
 import Logout from "./pages/Logout";
 import ApplyStaff from "./pages/ApplyStaff";
+import Notifications from "./pages/Notifications";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -38,6 +39,14 @@ function App() {
             <PublicRoute>
               <Register />
             </PublicRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <Notifications />
+            </ProtectedRoute>
           }
         />
         <Route
