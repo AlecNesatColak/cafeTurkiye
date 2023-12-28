@@ -12,6 +12,7 @@ function AddToMenu() {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const onFinish = async (values) => {
+    console.log(values);
     try {
       dispatch(showLoading());
       const response = await axios.post(
