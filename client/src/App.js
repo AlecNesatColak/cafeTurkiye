@@ -13,6 +13,8 @@ import Shop from "./pages/Shop";
 import Logout from "./pages/Logout";
 import ApplyStaff from "./pages/ApplyStaff";
 import Notifications from "./pages/Notifications";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AddToMenu from "./pages/AddToMenu";
 
 function App() {
   const { loading } = useSelector((state) => state.alerts);
@@ -66,6 +68,14 @@ function App() {
           }
         />
         <Route
+          path="/add-drink"
+          element={
+            <ProtectedRoute>
+              <AddToMenu />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/menu"
           element={
             <ProtectedRoute>
@@ -97,6 +107,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+        path="/privacy-policy"
+        element={
+          <PublicRoute>
+            <PrivacyPolicy />
+          </PublicRoute>
+        }
+      />
       </Routes>
     </BrowserRouter>
   );

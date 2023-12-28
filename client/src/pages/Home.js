@@ -26,7 +26,12 @@ function Home() {
 
   return (
     <Layout>
-        <h1>Home</h1>
+        <h1>Favorites</h1>
+        <div className="header"></div>
+        <h1>My Orders</h1>
+        <div className="header"></div>
+        <h1>My Cart</h1>
+        <div className="header"></div>
     </Layout>
   )
 }

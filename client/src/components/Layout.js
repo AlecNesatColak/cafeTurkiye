@@ -12,8 +12,8 @@ import { RiMenuUnfoldFill } from "react-icons/ri";
 import { IoIosNotificationsOutline } from "react-icons/io";
 import { MdOutlineWork } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { set } from "mongoose";
 import { Avatar, Badge } from "antd";
+import Footer from "./Footer";
 
 function Layout({ children }) {
   const { user } = useSelector((state) => state.user);
@@ -58,6 +58,11 @@ function Layout({ children }) {
       name: "users",
       path: "/users",
       icon: <FaUser />,
+    },
+    {
+      name: "Add to Menu",
+      path: "/add-drink",
+      icon: <MdMenuBook />,
     },
     {
       name: "staff",
@@ -105,7 +110,7 @@ function Layout({ children }) {
           </div>
         </div>
 
-        <div className="content">
+        <div className="content d-flex flex-column flex-grow-1">
           <div className="header">
             {collapesed ? (
               <i
@@ -123,18 +128,22 @@ function Layout({ children }) {
               </i>
             )}
             <div className="d-flex align-items-center px-4">
-              <Badge count={user?.unseenNotifs.length} onClick={()=>navigate('/notifications')}> 
+              <Badge
+                count={user?.unseenNotifs.length}
+                onClick={() => navigate("/notifications")}
+              >
                 <i className="header-action-icon px-2">
-                <IoIosNotificationsOutline/>
-              </i>
+                  <IoIosNotificationsOutline />
+                </i>
               </Badge>
-              
+
               <Link className="anchor mx-2" to="/profile">
                 {user?.name}
               </Link>
             </div>
           </div>
-          <div className="body">{children}</div>
+          <div className="body flex-grow-1">{children}</div>
+          <div className="header"><Footer/></div>
         </div>
       </div>
     </div>
